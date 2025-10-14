@@ -1,0 +1,497 @@
+/* app/globals.css */
+
+/* 
+  CSS CUSTOM PROPERTIES (Design Tokens)
+  These variables create a single source of truth for your design system.
+  By defining colors, spacing, and other values here, you can maintain
+  consistency throughout your application and make global changes easily.
+*/
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* 
+      COLOR SYSTEM
+      We're using a layered approach to dark mode colors. Think of it like
+      painting a canvas - you start with the darkest base and add lighter
+      layers on top. Each level creates depth and hierarchy.
+    */
+    
+    /* Background layers - from darkest to lightest */
+    --color-bg-primary: 10 10 10;        /* True black base - the canvas */
+    --color-bg-secondary: 18 18 18;      /* Slightly elevated - for cards */
+    --color-bg-tertiary: 26 26 26;       /* Even more elevated - for nested elements */
+    --color-bg-hover: 35 35 35;          /* Interactive hover states */
+    
+    /* Border colors - subtle separation without harsh lines */
+    --color-border-primary: 40 40 40;    /* Main borders - barely visible */
+    --color-border-secondary: 50 50 50;  /* Slightly more prominent */
+    --color-border-focus: 70 70 70;      /* When an element needs attention */
+    
+    /* Text colors - creating hierarchy through opacity */
+    --color-text-primary: 255 255 255;   /* Full white for main content */
+    --color-text-secondary: 156 163 175; /* Gray-400 for supporting text */
+    --color-text-tertiary: 107 114 128;  /* Gray-500 for least important text */
+    --color-text-disabled: 75 85 99;     /* Gray-600 for disabled states */
+    
+    /* 
+      ACCENT COLORS
+      These bring life to the interface. We use blue as the primary accent
+      because it's associated with trust and stability - perfect for finance.
+      The gradient adds visual interest without being overwhelming.
+    */
+    --color-accent-blue-400: 96 165 250;
+    --color-accent-blue-500: 59 130 246;
+    --color-accent-blue-600: 37 99 235;
+    --color-accent-blue-700: 29 78 216;
+    
+    /* Financial semantic colors */
+    --color-success-green: 34 197 94;    /* For positive growth */
+    --color-danger-red: 239 68 68;       /* For spending/losses */
+    --color-warning-amber: 251 191 36;   /* For alerts */
+    
+    /* 
+      GRADIENT DEFINITIONS
+      Gradients add depth and premium feel. We use them sparingly -
+      mainly for accent elements like the net worth chart fill.
+    */
+    --gradient-primary: linear-gradient(135deg, 
+      rgb(var(--color-accent-blue-600)) 0%, 
+      rgb(var(--color-accent-blue-400)) 100%);
+    
+    --gradient-chart-fill: linear-gradient(180deg,
+      rgba(var(--color-accent-blue-500), 0.2) 0%,
+      rgba(var(--color-accent-blue-500), 0) 100%);
+    
+    /* 
+      SPACING SYSTEM
+      Consistent spacing creates rhythm and makes the interface feel
+      intentional rather than random. These values follow an 8px grid.
+    */
+    --spacing-xs: 0.25rem;   /* 4px - tight spacing */
+    --spacing-sm: 0.5rem;    /* 8px - small gaps */
+    --spacing-md: 1rem;      /* 16px - default spacing */
+    --spacing-lg: 1.5rem;    /* 24px - section spacing */
+    --spacing-xl: 2rem;      /* 32px - major sections */
+    --spacing-2xl: 3rem;     /* 48px - page-level spacing */
+    
+    /* 
+      TYPOGRAPHY SCALE
+      A modular scale ensures text sizes have mathematical relationships,
+      creating visual harmony. We're using a 1.25 ratio (major third).
+    */
+    --text-xs: 0.75rem;      /* 12px - tiny labels */
+    --text-sm: 0.875rem;     /* 14px - secondary text */
+    --text-base: 1rem;       /* 16px - body text */
+    --text-lg: 1.125rem;     /* 18px - emphasized text */
+    --text-xl: 1.25rem;      /* 20px - small headings */
+    --text-2xl: 1.5rem;      /* 24px - card headings */
+    --text-3xl: 1.875rem;    /* 30px - section headings */
+    --text-4xl: 2.25rem;     /* 36px - large numbers like net worth */
+    
+    /* Font weights for hierarchy */
+    --font-normal: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --font-bold: 700;
+    
+    /* 
+      BORDER RADIUS
+      Consistent rounding creates visual cohesion. We use slightly larger
+      radius than typical Material Design to feel more modern and friendly.
+    */
+    --radius-sm: 0.375rem;   /* 6px - small elements like badges */
+    --radius-md: 0.5rem;     /* 8px - buttons, inputs */
+    --radius-lg: 0.75rem;    /* 12px - cards */
+    --radius-xl: 1rem;       /* 16px - large containers */
+    --radius-full: 9999px;   /* Perfect circles/pills */
+    
+    /* 
+      SHADOWS
+      In dark mode, shadows work differently than light mode. We use
+      very subtle shadows with lower opacity to create depth without
+      making things look muddy or dirty.
+    */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4),
+                 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4),
+                 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+    
+    /* 
+      TRANSITIONS
+      Consistent timing creates a unified feel. We use slightly slower
+      transitions than default because they feel more premium.
+    */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* 
+      LAYOUT DIMENSIONS
+      Fixed sizes for major layout elements ensure consistency.
+    */
+    --sidebar-width: 240px;
+    --header-height: 80px;
+  }
+  
+  /* 
+    BASE ELEMENT RESETS
+    These styles establish sensible defaults for all HTML elements,
+    overriding browser defaults to create a consistent starting point.
+  */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html {
+    /* 
+      Using 62.5% makes rem calculations easier: 1rem = 10px
+      But we're keeping it at 100% for better accessibility - users
+      who increase their browser font size will see it reflected.
+    */
+    font-size: 100%;
+    
+    /* 
+      Smooth scrolling for anchor links and programmatic scrolls.
+      This creates a polished feel when navigating between sections.
+    */
+    scroll-behavior: smooth;
+    
+    /* Prevent horizontal overflow which can break layouts */
+    overflow-x: hidden;
+  }
+  
+  body {
+    /* Apply our darkest background color to the entire page */
+    background-color: rgb(var(--color-bg-primary));
+    
+    /* Set default text color */
+    color: rgb(var(--color-text-primary));
+    
+    /* 
+      Font stack prioritizes system fonts for best performance and
+      native feel on each platform. Geist is Next.js's new default font.
+    */
+    font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont,
+      'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+      'Droid Sans', 'Helvetica Neue', sans-serif;
+    
+    font-size: var(--text-base);
+    line-height: 1.6;
+    
+    /* 
+      Anti-aliasing makes text look smoother on dark backgrounds.
+      This is especially important for white text on black.
+    */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    /* Prevent text size adjustment on mobile devices */
+    -webkit-text-size-adjust: 100%;
+  }
+  
+  /* 
+    HEADING STYLES
+    Headings should have tighter line-height and proper spacing.
+    We use letter-spacing to improve readability at larger sizes.
+  */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: var(--font-semibold);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: rgb(var(--color-text-primary));
+  }
+  
+  h1 { font-size: var(--text-4xl); }
+  h2 { font-size: var(--text-3xl); }
+  h3 { font-size: var(--text-2xl); }
+  h4 { font-size: var(--text-xl); }
+  h5 { font-size: var(--text-lg); }
+  h6 { font-size: var(--text-base); }
+  
+  /* 
+    LINK STYLES
+    Links should be clearly identifiable but not too prominent
+    in a finance interface where trust is paramount.
+  */
+  a {
+    color: rgb(var(--color-accent-blue-400));
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  
+  a:hover {
+    color: rgb(var(--color-accent-blue-300));
+  }
+  
+  /* 
+    BUTTON RESET
+    Remove default button styles so we can apply our own.
+  */
+  button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+  }
+  
+  /* 
+    INPUT AND FORM ELEMENT STYLES
+    Forms should feel native to our dark theme.
+  */
+  input, textarea, select {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+  }
+  
+  /* 
+    SCROLLBAR CUSTOMIZATION
+    Custom scrollbars that match our dark theme. This only works
+    in Webkit browsers (Chrome, Safari, Edge) but degrades gracefully.
+  */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--color-bg-primary));
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--color-border-secondary));
+    border-radius: var(--radius-full);
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--color-border-focus));
+  }
+  
+  /* Firefox scrollbar styling */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--color-border-secondary)) rgb(var(--color-bg-primary));
+  }
+}
+
+/* 
+  UTILITY CLASSES
+  These are reusable classes for common patterns. Think of them as
+  your design system's building blocks.
+*/
+@layer components {
+  
+  /* 
+    CARD COMPONENT
+    The foundational container used throughout the dashboard.
+    Cards create visual grouping and hierarchy.
+  */
+  .card {
+    background-color: rgb(var(--color-bg-secondary));
+    border: 1px solid rgb(var(--color-border-primary));
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    transition: border-color var(--transition-base);
+  }
+  
+  .card:hover {
+    border-color: rgb(var(--color-border-secondary));
+  }
+  
+  /* 
+    GLASS EFFECT
+    A subtle frosted glass effect for floating elements.
+    Use sparingly for modals or overlay elements.
+  */
+  .glass {
+    background: rgba(var(--color-bg-secondary), 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  
+  /* 
+    BUTTON VARIANTS
+    Pre-defined button styles for different contexts.
+  */
+  .btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-weight: var(--font-medium);
+    font-size: var(--text-sm);
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+  
+  .btn-primary {
+    background: var(--gradient-primary);
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .btn-secondary {
+    background-color: rgb(var(--color-bg-tertiary));
+    color: rgb(var(--color-text-primary));
+    border: 1px solid rgb(var(--color-border-primary));
+  }
+  
+  .btn-secondary:hover {
+    background-color: rgb(var(--color-bg-hover));
+    border-color: rgb(var(--color-border-secondary));
+  }
+  
+  .btn-ghost {
+    background-color: transparent;
+    color: rgb(var(--color-text-secondary));
+  }
+  
+  .btn-ghost:hover {
+    background-color: rgb(var(--color-bg-tertiary));
+    color: rgb(var(--color-text-primary));
+  }
+  
+  /* 
+    TEXT UTILITIES
+    Quick classes for common text styles.
+  */
+  .text-primary {
+    color: rgb(var(--color-text-primary));
+  }
+  
+  .text-secondary {
+    color: rgb(var(--color-text-secondary));
+  }
+  
+  .text-muted {
+    color: rgb(var(--color-text-tertiary));
+  }
+  
+  /* 
+    BADGE COMPONENT
+    Small labels for categories, statuses, etc.
+  */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    background-color: rgb(var(--color-bg-tertiary));
+    color: rgb(var(--color-text-secondary));
+  }
+  
+  /* 
+    DIVIDER
+    Horizontal line for separating content sections.
+  */
+  .divider {
+    height: 1px;
+    background-color: rgb(var(--color-border-primary));
+    margin: var(--spacing-lg) 0;
+  }
+  
+  /* 
+    SKELETON LOADER
+    Animated placeholder for loading states.
+  */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      rgb(var(--color-bg-secondary)) 0%,
+      rgb(var(--color-bg-tertiary)) 50%,
+      rgb(var(--color-bg-secondary)) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+    border-radius: var(--radius-md);
+  }
+  
+  @keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+}
+
+/* 
+  ANIMATION UTILITIES
+  Pre-defined animations for common UI patterns.
+*/
+@layer utilities {
+  /* Gradient Animations for Hero Text */
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 3s ease infinite;
+  }
+
+  .animate-gradient-reverse {
+    background-size: 200% 200%;
+    animation: gradient 3s ease infinite reverse;
+  }
+
+  /* Delay utility */
+  .delay-1000 {
+    animation-delay: 1s;
+  }
+
+  
+  /* Fade in animation for page loads and new content */
+  .animate-fade-in {
+    animation: fadeIn var(--transition-base) ease-in;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  /* Slide up animation for modals and drawers */
+  .animate-slide-up {
+    animation: slideUp var(--transition-slow) ease-out;
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Scale animation for interactive elements */
+  .animate-scale {
+    transition: transform var(--transition-fast);
+  }
+  
+  .animate-scale:hover {
+    transform: scale(1.02);
+  }
+  
+  .animate-scale:active {
+    transform: scale(0.98);
+  }
+}
