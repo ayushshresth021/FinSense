@@ -148,6 +148,11 @@ export const createTransaction = async (req: Request, res: Response) => {
     // Validate request body
     const validatedData = createTransactionSchema.parse(req.body);
 
+    // Set default date if not provided or empty
+    const transactionDate = validatedData.date && validatedData.date !== "" 
+      ? validatedData.date 
+      : new Date().toISOString().split('T')[0];
+
     // Create transaction
     const sb = req.supabase!;
     const { data, error } = await sb
@@ -159,7 +164,7 @@ export const createTransaction = async (req: Request, res: Response) => {
         category: validatedData.category,
         merchant: validatedData.merchant || null,
         note: validatedData.note || null,
-        date: validatedData.date || new Date().toUTCString().split('T')[0],
+        date: transactionDate,
       })
       .select()
       .single();

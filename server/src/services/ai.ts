@@ -135,6 +135,7 @@ If cannot parse amount, respond with { "error": "Could not parse transaction" }
       category: parsed.category,
       merchant: parsed.merchant || '',
       note: parsed.note || '',
+      date: parsed.date || undefined,
     };
   } catch (error) {
     console.error('Transaction parsing error:', error);

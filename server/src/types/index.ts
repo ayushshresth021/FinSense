@@ -56,6 +56,7 @@ export interface Transaction {
     category: string;
     merchant: string;
     note?: string;
+    date?: string;
   }
   
   export interface TranscribeAudioRequest {
