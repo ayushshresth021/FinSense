@@ -16,12 +16,12 @@ export default function DashboardPage() {
         <div>
           <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
           <p className="text-secondary">
-            Welcome back! Here's your financial overview.
+            Welcome back! Here&apos;s your financial overview.
           </p>
         </div>
         <Link
           href="/dashboard/insights"
-          className="btn btn-secondary flex items-center gap-2"
+          className="flex items-center gap-2 px-4 py-2 rounded-md bg-gradient-to-r from-[#003566] to-[#001d3d] text-white hover:from-[#004a8a] hover:to-[#002a5a] transition-all duration-200 shadow-sm text-sm font-medium"
         >
           <Lightbulb className="w-4 h-4" />
           View Insights

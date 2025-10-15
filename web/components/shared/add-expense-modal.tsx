@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Mic, Type } from 'lucide-react';
 import { VoiceInput } from './voice-input';
 import { TextInput } from './text-input';
 import { TransactionPreview } from './transaction-preview';
@@ -74,23 +74,25 @@ export function AddExpenseModal({ isOpen, onClose }: AddExpenseModalProps) {
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setActiveTab('voice')}
-            className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
+            className={`flex-1 py-2 px-4 rounded-md font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
               activeTab === 'voice'
-                ? 'bg-blue-500 text-white'
-                : 'bg-[rgb(var(--color-bg-tertiary))] text-secondary hover:text-primary'
+                ? 'bg-gradient-to-r from-[#003566] to-[#001d3d] text-white shadow-sm'
+                : 'bg-[rgb(var(--color-bg-tertiary))] text-secondary hover:text-primary hover:bg-[rgb(var(--color-bg-hover))]'
             }`}
           >
-            🎤 Voice
+            <Mic className="w-4 h-4" />
+            Voice
           </button>
           <button
             onClick={() => setActiveTab('text')}
-            className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
+            className={`flex-1 py-2 px-4 rounded-md font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
               activeTab === 'text'
-                ? 'bg-blue-500 text-white'
-                : 'bg-[rgb(var(--color-bg-tertiary))] text-secondary hover:text-primary'
+                ? 'bg-gradient-to-r from-[#003566] to-[#001d3d] text-white shadow-sm'
+                : 'bg-[rgb(var(--color-bg-tertiary))] text-secondary hover:text-primary hover:bg-[rgb(var(--color-bg-hover))]'
             }`}
           >
-            ✍️ Text
+            <Type className="w-4 h-4" />
+            Text
           </button>
         </div>
 

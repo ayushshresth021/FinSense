@@ -2,7 +2,6 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { insightsApi } from '../../app/lib/api';
-import { DailySpending } from '@/types';
 import { useState } from 'react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, addMonths } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
@@ -28,7 +27,6 @@ export function SpendingCalendar() {
   const localStart = toZonedTime(utcStart, timeZone);
   const localEnd = toZonedTime(utcEnd, timeZone);
 
-  const daysInMonth = eachDayOfInterval({ start: localStart, end: localEnd }).length;
   const firstDayOfMonth = getDay(localStart);
 
   const days = eachDayOfInterval({ start: localStart, end: localEnd }).map((localDate) => {

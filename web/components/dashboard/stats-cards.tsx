@@ -19,7 +19,6 @@ export function StatsCards() {
   });
 
   const totalExpenses = data?.summary.totalExpenses ?? 0;
-  const totalIncome = data?.summary.totalIncome ?? 0;
   const budget = 1000; // TODO: Fetch from user settings
   const remaining = budget - totalExpenses;
   const percentUsed = (totalExpenses / budget) * 100;

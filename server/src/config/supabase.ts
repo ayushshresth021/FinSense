@@ -25,7 +25,7 @@ export const supabaseAdmin: SupabaseClient = createClient(
 // Use this when you want RLS policies to apply
 export const supabase: SupabaseClient = createClient(
   process.env.SUPABASE_URL,
-  (process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY)!
+  process.env.SUPABASE_ANON_KEY!
 );
 
 /**
@@ -35,7 +35,7 @@ export const supabase: SupabaseClient = createClient(
 export const getSupabaseClient = (accessToken: string): SupabaseClient => {
   return createClient(
     process.env.SUPABASE_URL!,
-    (process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY)!,
+    process.env.SUPABASE_ANON_KEY!,
     {
       global: {
         headers: {

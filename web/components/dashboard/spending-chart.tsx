@@ -3,7 +3,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { insightsApi } from '../../app/lib/api';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { Linden_Hill } from 'next/font/google';
 
 export function SpendingChart() {
   const { data: chartData, isLoading } = useQuery({
@@ -19,7 +18,7 @@ export function SpendingChart() {
       });
 
       return response.dailySpending.map((day) => ({
-        date: new Date(`${day.date}T23:59:59Z`).toLocaleDateString('en-US', { weekday: 'short' }),
+        date: new Date(`${day.date}T23:59:59Z`).toLocaleDateString("en-US", { weekday: "short" }),
         amount: day.amount,
       }));
     },
@@ -35,7 +34,7 @@ export function SpendingChart() {
 
   return (
     <div className="card h-auto">
-      <h3 className="text-lg font-semibold mb-4">This Week's Spending</h3>
+      <h3 className="text-lg font-semibold mb-4">This Week&apos;s Spending</h3>
       <ResponsiveContainer width="100%" height="95%">
         <LineChart data={chartData}>
           <XAxis dataKey="date" />

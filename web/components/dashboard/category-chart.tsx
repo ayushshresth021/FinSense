@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { insightsApi } from '../../app/lib/api';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Sankey } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 

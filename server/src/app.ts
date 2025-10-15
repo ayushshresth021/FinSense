@@ -1,5 +1,6 @@
 import express, { Application } from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import routes from './routes';
 import { errorHandler, notFoundHandler } from './middleware/error';
 import multer from 'multer';
@@ -11,6 +12,9 @@ const app: Application = express();
 // ============================================
 // MIDDLEWARE
 // ============================================
+
+// Security headers
+app.use(helmet());
 
 // CORS - Allow requests from frontend
 app.use(
@@ -52,8 +56,17 @@ app.set('upload', upload);
 // Request logging (development only)
 if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
+    // Don't log sensitive data like passwords
+    const sanitizedBody = req.body ? { ...req.body } : {};
+    if (sanitizedBody.password) {
+      sanitizedBody.password = '[REDACTED]';
+    }
+    if (sanitizedBody.confirmPassword) {
+      sanitizedBody.confirmPassword = '[REDACTED]';
+    }
+    
     console.log(`${req.method} ${req.path}`, {
-      body: req.body,
+      body: sanitizedBody,
       query: req.query,
     });
     next();

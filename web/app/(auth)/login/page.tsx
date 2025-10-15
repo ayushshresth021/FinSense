@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../../../app/lib/store/auth';
 import Image from 'next/image';
+import { ArrowLeft } from 'lucide-react';
 import LogoImage from '@/assets/logo.jpg';
 
 export default function LoginPage() {
@@ -32,6 +33,15 @@ export default function LoginPage() {
 
   return (
     <div className="card p-8">
+      {/* Back to Home Button */}
+      <Link 
+        href="/" 
+        className="inline-flex items-center gap-2 text-sm text-secondary hover:text-primary transition-colors mb-6"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to Home
+      </Link>
+
       {/* Logo */}
       <div className="flex items-center justify-center gap-2 mb-8">
         <Image
@@ -96,7 +106,7 @@ export default function LoginPage() {
       </form>
 
       <p className="text-center text-secondary text-sm mt-6">
-        Don't have an account?{' '}
+        Don&apos;t have an account?{` `}
         <Link href="/signup" className="text-blue-400 hover:text-blue-300">
           Sign up
         </Link>

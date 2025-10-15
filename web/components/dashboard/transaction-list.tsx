@@ -3,10 +3,12 @@
 import { useTransactions } from '../../app/lib/hooks/use-transactions';
 import { Coffee, Car, ShoppingBag, Film, Home, Heart, MoreHorizontal } from 'lucide-react';
 import { Transaction } from '@/types';
-import { format, isToday, isYesterday, startOfDay } from 'date-fns';
+import { format, isToday, isYesterday } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 
-const categoryIcons: Record<string, any> = {
+import type { SVGProps } from 'react';
+
+const categoryIcons: Record<string, React.ComponentType<SVGProps<SVGSVGElement>>> = {
   'Food & Drink': Coffee,
   'Transportation': Car,
   'Shopping': ShoppingBag,
@@ -64,7 +66,6 @@ function TransactionItem({ transaction }: { transaction: Transaction }) {
   // Format date
   const transactionDateUTC = new Date(`${transaction.date}T23:59:59Z`); // Assume stored as UTC end of day
   const localTransactionDate = toZonedTime(transactionDateUTC, Intl.DateTimeFormat().resolvedOptions().timeZone);
-  const localCurrentDate = startOfDay(new Date());
 
   const isTransactionToday = isToday(localTransactionDate);
   const isTransactionYesterday = isYesterday(localTransactionDate);

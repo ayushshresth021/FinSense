@@ -5,6 +5,7 @@ import {
   Insight,
   InsightType,
 } from '../types';
+import { subDays, subWeeks, subMonths, parse, isValid, format } from 'date-fns';
 
 // ============================================
 // CONSTANTS
@@ -58,6 +59,85 @@ export const transcribeAudio = async (
 };
 
 // ============================================
+// DATE PARSING UTILITIES
+// ============================================
+
+/**
+ * Parse relative date phrases to actual dates
+ * @param datePhrase - Natural language date phrase
+ * @param referenceDate - Reference date (defaults to today)
+ * @returns Date string in YYYY-MM-DD format
+ */
+const parseRelativeDate = (datePhrase: string, referenceDate: Date = new Date()): string => {
+  const phrase = datePhrase.toLowerCase().trim();
+  
+  // Handle common relative date patterns
+  const patterns = [
+    // Yesterday variations
+    { pattern: /^yesterday$/i, fn: () => subDays(referenceDate, 1) },
+    { pattern: /^day before yesterday$/i, fn: () => subDays(referenceDate, 2) },
+    
+    // Days ago patterns
+    { pattern: /^(\d+)\s+days?\s+ago$/i, fn: (match: RegExpMatchArray) => subDays(referenceDate, parseInt(match[1])) },
+    { pattern: /^(\d+)\s+day\s+before$/i, fn: (match: RegExpMatchArray) => subDays(referenceDate, parseInt(match[1])) },
+    
+    // Weeks ago patterns
+    { pattern: /^last\s+week$/i, fn: () => subWeeks(referenceDate, 1) },
+    { pattern: /^(\d+)\s+weeks?\s+ago$/i, fn: (match: RegExpMatchArray) => subWeeks(referenceDate, parseInt(match[1])) },
+    { pattern: /^(\d+)\s+week\s+before$/i, fn: (match: RegExpMatchArray) => subWeeks(referenceDate, parseInt(match[1])) },
+    
+    // Months ago patterns
+    { pattern: /^last\s+month$/i, fn: () => subMonths(referenceDate, 1) },
+    { pattern: /^(\d+)\s+months?\s+ago$/i, fn: (match: RegExpMatchArray) => subMonths(referenceDate, parseInt(match[1])) },
+    
+    // Today variations
+    { pattern: /^today$/i, fn: () => referenceDate },
+    { pattern: /^this\s+morning$/i, fn: () => referenceDate },
+    { pattern: /^this\s+afternoon$/i, fn: () => referenceDate },
+    { pattern: /^this\s+evening$/i, fn: () => referenceDate },
+  ];
+  
+  for (const { pattern, fn } of patterns) {
+    const match = phrase.match(pattern);
+    if (match) {
+      try {
+        const resultDate = fn(match);
+        return format(resultDate, 'yyyy-MM-dd');
+      } catch (error) {
+        console.warn('Date parsing error for phrase:', phrase, error);
+        break;
+      }
+    }
+  }
+  
+  // If no pattern matches, try to parse as a regular date
+  try {
+    // Try common date formats
+    const dateFormats = [
+      'MM/dd/yyyy',
+      'dd/MM/yyyy', 
+      'yyyy-MM-dd',
+      'MMM dd, yyyy',
+      'MMMM dd, yyyy',
+      'dd MMM yyyy',
+      'dd MMMM yyyy'
+    ];
+    
+    for (const dateFormat of dateFormats) {
+      const parsedDate = parse(phrase, dateFormat, referenceDate);
+      if (isValid(parsedDate)) {
+        return format(parsedDate, 'yyyy-MM-dd');
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to parse date phrase:', phrase, error);
+  }
+  
+  // Fallback to today's date
+  return format(referenceDate, 'yyyy-MM-dd');
+};
+
+// ============================================
 // TRANSACTION PARSING
 // ============================================
 
@@ -70,20 +150,25 @@ export const parseTransaction = async (
   text: string
 ): Promise<ParseTransactionResponse> => {
   try {
+    const today = new Date();
+    const todayFormatted = format(today, 'yyyy-MM-dd');
+    
     const prompt = `
 Parse this transaction text into structured data.
+Today is ${format(today, 'EEEE, MMMM do, yyyy')}.
+
 Extract:
 - type: "income" or "expense" (default to "expense" if unclear)
 - amount: number (required, throw error if missing)
 - category: one of ["Food & Drink", "Transportation", "Shopping", "Entertainment", "Bills & Utilities", "Healthcare", "Other"] (default "Other")
 - merchant: string (optional)
 - note: string (optional)
-- date: YYYY-MM-DD (default to today "${new Date().toISOString().split('T')[0]}", but parse relative dates like "yesterday", "3 days ago", "last week")
+- datePhrase: the exact date phrase mentioned in the text (e.g., "yesterday", "3 days ago", "last week", "today") or "today" if no date mentioned
 
 Text: "${text}"
 
 Respond ONLY with valid JSON in this format:
-{ "type": "...", "amount": 0, "category": "...", "merchant": "...", "note": "...", "date": "YYYY-MM-DD" }
+{ "type": "...", "amount": 0, "category": "...", "merchant": "...", "note": "...", "datePhrase": "..." }
 If cannot parse amount, respond with { "error": "Could not parse transaction" }
 `;
 
@@ -93,7 +178,7 @@ If cannot parse amount, respond with { "error": "Could not parse transaction" }
         {
           role: 'system',
           content:
-            'You are a financial assistant. Always respond with valid JSON only.',
+            'You are a financial assistant. Always respond with valid JSON only. Pay special attention to extracting the exact date phrase mentioned.',
         },
         {
           role: 'user',
@@ -101,7 +186,7 @@ If cannot parse amount, respond with { "error": "Could not parse transaction" }
         },
       ],
       response_format: { type: 'json_object' },
-      temperature: 0.3, // Lower temperature for more consistent parsing
+      temperature: 0.1, // Lower temperature for more consistent parsing
     });
 
     const content = response.choices[0].message.content;
@@ -116,16 +201,27 @@ If cannot parse amount, respond with { "error": "Could not parse transaction" }
       throw new Error(parsed.error);
     }
 
-    // Validate parsed data
+    // Validate parsed data (removed confidence check as it doesn't exist)
     if (
       !parsed.amount ||
       !parsed.type ||
-      !parsed.category ||
-      parsed.confidence < 0.6
+      !parsed.category
     ) {
       throw new Error(
         'Could not confidently parse transaction. Try being more specific.'
       );
+    }
+
+    // Parse the date phrase to actual date
+    let actualDate = todayFormatted; // default to today
+    if (parsed.datePhrase && parsed.datePhrase !== 'today') {
+      try {
+        actualDate = parseRelativeDate(parsed.datePhrase, today);
+        console.log(`Parsed date phrase "${parsed.datePhrase}" to "${actualDate}"`);
+      } catch (error) {
+        console.warn('Date parsing failed, using today:', error);
+        actualDate = todayFormatted;
+      }
     }
 
     // Return structured data
@@ -135,7 +231,7 @@ If cannot parse amount, respond with { "error": "Could not parse transaction" }
       category: parsed.category,
       merchant: parsed.merchant || '',
       note: parsed.note || '',
-      date: parsed.date || undefined,
+      date: actualDate,
     };
   } catch (error) {
     console.error('Transaction parsing error:', error);

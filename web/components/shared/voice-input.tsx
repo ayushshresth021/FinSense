@@ -57,37 +57,37 @@ export function VoiceInput({
         {!isRecording && !audioBlob && (
           <button
             onClick={handleStartRecording}
-            className="w-32 h-32 mx-auto bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center hover:from-blue-600 hover:to-blue-700 transition-all hover:scale-105 active:scale-95"
+            className="w-20 h-20 mx-auto bg-gradient-to-r from-[#003566] to-[#001d3d] rounded-full flex items-center justify-center hover:from-[#004a8a] hover:to-[#002a5a] transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg"
           >
-            <Mic className="w-12 h-12 text-white" />
+            <Mic className="w-8 h-8 text-white" />
           </button>
         )}
 
         {isRecording && (
           <button
             onClick={handleStopRecording}
-            className="w-32 h-32 mx-auto bg-red-500 rounded-full flex items-center justify-center animate-pulse"
+            className="w-20 h-20 mx-auto bg-red-500 rounded-full flex items-center justify-center animate-pulse shadow-lg"
           >
-            <Square className="w-12 h-12 text-white" />
+            <Square className="w-8 h-8 text-white" />
           </button>
         )}
 
         {audioBlob && !isRecording && (
           <div className="space-y-4">
-            <div className="w-32 h-32 mx-auto bg-green-500/10 rounded-full flex items-center justify-center">
-              <Mic className="w-12 h-12 text-green-400" />
+            <div className="w-20 h-20 mx-auto bg-green-500/10 rounded-full flex items-center justify-center border-2 border-green-400/20">
+              <Mic className="w-8 h-8 text-green-400" />
             </div>
             <div className="flex gap-2 justify-center">
               <button
                 onClick={resetRecording}
-                className="btn btn-secondary"
+                className="px-4 py-2 rounded-md bg-[rgb(var(--color-bg-tertiary))] text-secondary hover:bg-[rgb(var(--color-bg-hover))] hover:text-primary transition-all duration-200 text-sm font-medium"
                 disabled={isProcessing}
               >
                 Re-record
               </button>
               <button
                 onClick={handleSubmit}
-                className="btn btn-primary"
+                className="px-4 py-2 rounded-md bg-gradient-to-r from-[#003566] to-[#001d3d] text-white hover:from-[#004a8a] hover:to-[#002a5a] transition-all duration-200 shadow-sm text-sm font-medium"
                 disabled={isProcessing}
               >
                 {isProcessing ? 'Processing...' : 'Submit'}
@@ -104,7 +104,7 @@ export function VoiceInput({
             Tap the microphone and say something like:
             <br />
             <span className="text-primary font-medium">
-              "I spent $20 on coffee at Starbucks"
+              &quot;I spent $20 on coffee at Starbucks&quot;
             </span>
           </p>
         )}

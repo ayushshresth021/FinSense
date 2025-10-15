@@ -86,7 +86,7 @@ export function TextInput({
       <button
         type="submit"
         disabled={isProcessing || !text.trim()}
-        className="w-full btn btn-primary py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full py-3 rounded-md bg-gradient-to-r from-[#003566] to-[#001d3d] text-white hover:from-[#004a8a] hover:to-[#002a5a] transition-all duration-200 shadow-sm text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-[#003566] disabled:hover:to-[#001d3d]"
       >
         {isProcessing ? 'Processing...' : 'Parse Transaction'}
       </button>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../../../app/lib/store/auth';
 import Image from 'next/image';
+import { ArrowLeft } from 'lucide-react';
 import LogoImage from '@/assets/logo.jpg';
 
 export default function SignupPage() {
@@ -27,8 +28,8 @@ export default function SignupPage() {
     }
 
     // Validate password length
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters');
       return;
     }
 
@@ -46,6 +47,15 @@ export default function SignupPage() {
 
   return (
     <div className="card p-8">
+      {/* Back to Home Button */}
+      <Link 
+        href="/" 
+        className="inline-flex items-center gap-2 text-sm text-secondary hover:text-primary transition-colors mb-6"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to Home
+      </Link>
+
       {/* Logo */}
       <div className="flex items-center justify-center gap-2 mb-8">
         <Image

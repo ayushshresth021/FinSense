@@ -12,31 +12,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { ArrowRight, Mic, Brain, TrendingUp } from 'lucide-react';
-import Lenis from '@studio-freight/lenis';
 import LogoImage from '@/assets/logo.jpg';
 
 type IconType = ComponentType<SVGProps<SVGSVGElement>>;
 
 export default function LandingPage() {
-  useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-    });
-
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
-
-    return () => {
-      lenis.destroy();
-    };
-  }, []);
-
   return (
     <div className="min-h-screen overflow-x-hidden">
       <Navigation />
@@ -63,7 +43,7 @@ function Navigation() {
 
   return (
     <motion.nav
-      style={{ backgroundColor, borderColor }}
+      style={{ backgroundColor, borderColor, willChange: 'background-color, border-color' }}
       className="fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-sm"
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -73,7 +53,6 @@ function Navigation() {
           transition={{ duration: 0.6 }}
           className="flex items-center gap-2"
         >
-        <div className="flex items-center justify-center gap-2 mb-8">
           <Image
             src={LogoImage}
             alt="FinSense logo"
@@ -82,7 +61,6 @@ function Navigation() {
             className="object-contain rounded-lg"
           />
           <span className="text-2xl font-bold">FinSense</span>
-        </div>
         </motion.div>
         <motion.div
           initial={{ opacity: 0, x: 20 }}
@@ -107,7 +85,7 @@ function Navigation() {
 
 function HeroSection() {
   return (
-    <section className="relative flex min-h-screen items-center justify-center overflow-hidden pt-16">
+    <section className="relative flex min-h-screen items-center justify-center overflow-hidden pt-16 pb-8">
       <FloatingParticles />
 
       <div className="absolute top-1/4 -left-48 h-96 w-96 animate-pulse rounded-full bg-blue-500/20 blur-3xl" />
@@ -155,7 +133,15 @@ function HeroSection() {
             </span>
             <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 opacity-0 transition-opacity group-hover:opacity-100" />
           </Link>
-          <button className="rounded-xl border-2 border-blue-500/30 px-8 py-4 text-lg font-semibold transition-all hover:border-blue-500 hover:bg-blue-500/10">
+          <button 
+            onClick={() => {
+              const demoSection = document.getElementById('demo');
+              if (demoSection) {
+                demoSection.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+            className="rounded-xl border-2 border-blue-500/30 px-8 py-4 text-lg font-semibold transition-all hover:border-blue-500 hover:bg-blue-500/10"
+          >
             Watch Demo
           </button>
         </motion.div>
@@ -191,7 +177,7 @@ function ProblemSection() {
   ];
 
   return (
-    <section ref={ref} className="relative px-4 py-32 sm:px-6 lg:px-8">
+    <section ref={ref} className="relative px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -202,7 +188,7 @@ function ProblemSection() {
           <h2 className="text-5xl font-bold md:text-6xl">
             Finance Tracking
             <br />
-            <span className="text-secondary">Shouldn't Feel Like Work</span>
+            <span className="text-secondary">Shouldn&apos;t Feel Like Work</span>
           </h2>
         </motion.div>
 
@@ -225,7 +211,7 @@ function ProblemSection() {
           transition={{ duration: 0.8, delay: 1 }}
           className="text-center"
         >
-          <p className="text-2xl font-semibold text-blue-400">There's a better way ↓</p>
+          <p className="text-2xl font-semibold text-blue-400">There&apos;s a better way ↓</p>
         </motion.div>
       </div>
     </section>
@@ -311,7 +297,7 @@ function FeaturesSection() {
       </div>
 
       <motion.div
-        style={{ y }}
+        style={{ y, willChange: 'transform' }}
         className="pointer-events-none absolute right-0 top-1/2 h-48 w-48 rounded-full bg-blue-500/10 blur-3xl"
       />
     </section>
@@ -395,7 +381,7 @@ function DemoSection() {
   const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
 
   return (
-    <section ref={ref} className="px-4 py-32 sm:px-6 lg:px-8">
+    <section id="demo" ref={ref} className="px-4 py-32 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -410,19 +396,29 @@ function DemoSection() {
           </p>
         </motion.div>
 
-        <motion.div style={{ scale, opacity }} className="relative mx-auto max-w-5xl">
+        <motion.div style={{ scale, opacity, willChange: 'transform, opacity' }} className="relative mx-auto max-w-5xl">
           <div className="card bg-gradient-to-br from-blue-500/20 to-blue-600/20 p-2">
-            <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-[rgb(var(--color-bg-primary))]">
-              <div className="z-10 text-center">
-                <Mic className="mx-auto mb-6 h-24 w-24 text-blue-400 animate-pulse" />
-                <p className="mb-2 text-2xl font-semibold">Demo Video</p>
-                <p className="text-secondary">"I spent twenty bucks on lunch at Chipotle"</p>
-              </div>
-
-              <div className="absolute inset-0 opacity-30">
-                <div className="absolute left-1/4 top-1/4 h-32 w-32 animate-pulse rounded-full bg-blue-500 blur-3xl" />
-                <div className="absolute bottom-1/4 right-1/4 h-32 w-32 animate-pulse rounded-full bg-blue-600 blur-3xl [animation-delay:1s]" />
-              </div>
+            <div className="relative aspect-video overflow-hidden rounded-lg bg-[rgb(var(--color-bg-primary))]">
+              <video
+                className="h-full w-full object-cover"
+                style={{ 
+                  transform: 'scale(1.02)',
+                  margin: '-0.5px'
+                }}
+                controls
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                poster=""
+              >
+                <source src="/Demo_Video.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              
+              {/* Optional overlay for branding */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
             </div>
           </div>
         </motion.div>
@@ -479,7 +475,7 @@ function FloatingParticles() {
       }>;
     }
 
-    return Array.from({ length: 20 }, () => ({
+    return Array.from({ length: 12 }, () => ({
       startX: Math.random() * dimensions.width,
       startY: Math.random() * dimensions.height,
       endX: Math.random() * dimensions.width,
@@ -494,11 +490,12 @@ function FloatingParticles() {
   }
 
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" style={{ willChange: 'transform' }}>
       {particles.map((particle, index) => (
         <motion.div
           key={`particle-${index}`}
           className="absolute h-1 w-1 rounded-full bg-blue-400/30"
+          style={{ willChange: 'transform, opacity' }}
           initial={{ x: particle.startX, y: particle.startY, opacity: 0.6 }}
           animate={{
             x: [particle.startX, particle.endX],
